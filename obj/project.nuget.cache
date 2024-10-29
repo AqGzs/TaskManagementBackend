@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "Ibkg8cTgbhCguPG0RznkflAJglKBhUVa0rNP5PZW37g941LIi6MqvLs13nZDFv7jEUrdz4XN5wZLeLJMtboW/g==",
+  "dgSpecHash": "1y6cbYPFU0tYc2zEMlNlZCCDTwXWjmqqMAM+OR97O1F8inzo14uW1amTjwZfAx6C8QObY+hK4rhCKRnjgSIr+g==",
   "success": true,
   "projectFilePath": "E:\\TaskManagementBackend\\TaskManagementBackend\\TaskManagementBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.11\\microsoft.aspnetcore.authentication.jwtbearer.7.0.11.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
