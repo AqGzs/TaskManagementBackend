@@ -8,6 +8,14 @@ namespace TaskManagementBackend.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<TaskItem> Tasks { get; set; }
+        public DbSet<TaskItem> TaskItems { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure one-to-many relationship
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.TaskItems)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId);
+        }
     }
 }

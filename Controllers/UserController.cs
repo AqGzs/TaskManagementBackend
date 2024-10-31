@@ -4,8 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TaskManagementBackend.Data;
-using TaskManagementBackend.Controllers;
 using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskManagementBackend.Controllers
 {
@@ -22,7 +22,6 @@ namespace TaskManagementBackend.Controllers
             _configuration = configuration;
         }
 
-        // Endpoint để đăng ký tài khoản
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
@@ -37,19 +36,21 @@ namespace TaskManagementBackend.Controllers
                 Username = model.Username,
                 Email = model.Email,
                 PasswordHash = hashedPassword
+                // Không gán UserId ở đây
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok("User registered successfully");
+            return Ok(new { message = "User registered successfully", userId = user.UserId });
         }
+
 
         // Endpoint để đăng nhập
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email.Trim());
             if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
                 return Unauthorized("Invalid email or password");
 
