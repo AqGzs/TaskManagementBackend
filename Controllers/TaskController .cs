@@ -19,7 +19,6 @@ using TaskManagementBackend.Controllers;
             _context = context;
         }
 
-        // GET: api/Task - Lấy danh sách tất cả các TaskItem của người dùng
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasks()
         {
@@ -31,7 +30,6 @@ using TaskManagementBackend.Controllers;
                 .ToListAsync();
         }
 
-        // GET: api/Task/{id} - Lấy thông tin một TaskItem cụ thể của người dùng
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskItem>> GetTask(int id)
         {
@@ -59,13 +57,12 @@ using TaskManagementBackend.Controllers;
 
             int tokenUserId = int.Parse(User.FindFirst(ClaimTypes.Name)?.Value);
 
-            // Ensure the UserId in the request matches the one in the token
             if (taskItem.UserId != tokenUserId)
             {
                 return Unauthorized("User ID in token does not match User ID in request body.");
             }
 
-            taskItem.UserId = tokenUserId;  // Gán lại UserId từ token cho TaskItem để đảm bảo chính xác
+            taskItem.UserId = tokenUserId;
 
             _context.TaskItems.Add(taskItem);
             await _context.SaveChangesAsync();
@@ -73,9 +70,6 @@ using TaskManagementBackend.Controllers;
             return CreatedAtAction(nameof(GetTask), new { id = taskItem.TaskId }, taskItem);
         }
 
-
-
-        // PUT: api/Task/{id} - Cập nhật một TaskItem của người dùng
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTask(int id, TaskItem taskItem)
         {
@@ -86,7 +80,6 @@ using TaskManagementBackend.Controllers;
                 return BadRequest();
             }
 
-            // Kiểm tra xem task thuộc về người dùng hiện tại không
             var existingTask = await _context.TaskItems.FirstOrDefaultAsync(t => t.TaskId == id && t.UserId == userId);
             if (existingTask == null)
             {
@@ -103,7 +96,6 @@ using TaskManagementBackend.Controllers;
             return NoContent();
         }
 
-        // DELETE: api/Task/{id} - Xóa một TaskItem của người dùng
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask(int id)
         {
@@ -121,6 +113,7 @@ using TaskManagementBackend.Controllers;
             return NoContent();
         }
 
+
         [HttpPatch("{id}/complete")]
         public async Task<IActionResult> MarkTaskAsComplete(int id, [FromBody] bool isComplete)
         {
@@ -133,13 +126,24 @@ using TaskManagementBackend.Controllers;
                 return NotFound();
             }
 
-            taskItem.IsComplete = isComplete; // Cập nhật trạng thái hoàn thành
+            taskItem.IsComplete = isComplete;
             await _context.SaveChangesAsync();
 
-            return NoContent(); // Trả về 204 No Content khi cập nhật thành công
+            return NoContent(); 
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasksByCompletionStatus(bool isComplete)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.Name)?.Value);
+
+            var tasks = await _context.TaskItems
+                .Where(t => t.UserId == userId && t.IsComplete == isComplete)
+                .ToListAsync();
+
+            return tasks;
         }
 
     }
-
 }
 
