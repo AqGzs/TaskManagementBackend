@@ -46,7 +46,6 @@ using TaskManagementBackend.Controllers;
 
             return taskItem;
         }
-
         [HttpPost]
         public async Task<ActionResult<TaskItem>> CreateTask([FromBody] TaskItem taskItem)
         {
@@ -55,20 +54,19 @@ using TaskManagementBackend.Controllers;
                 return BadRequest(ModelState);
             }
 
+            // Lấy userId từ token đã xác thực
             int tokenUserId = int.Parse(User.FindFirst(ClaimTypes.Name)?.Value);
+            taskItem.UserId = tokenUserId; // Chỉ đặt UserId, không bao gồm đối tượng User
 
-            if (taskItem.UserId != tokenUserId)
-            {
-                return Unauthorized("User ID in token does not match User ID in request body.");
-            }
-
-            taskItem.UserId = tokenUserId;
+            // Đảm bảo không có tham chiếu tới đối tượng User khi lưu
+            taskItem.User = null;
 
             _context.TaskItems.Add(taskItem);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetTask), new { id = taskItem.TaskId }, taskItem);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTask(int id, TaskItem taskItem)
