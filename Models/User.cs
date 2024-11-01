@@ -10,17 +10,17 @@ namespace TaskManagementBackend.Controllers
 
         [Required]
         [StringLength(50)]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [Required]
         [EmailAddress]
         [StringLength(256)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; } 
 
-        public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>(); 
+        public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
     }
 }
 
