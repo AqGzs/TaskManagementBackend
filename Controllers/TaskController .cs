@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using TaskManagementBackend.Controllers;
 
-    namespace TaskManagementBackend.Controllers
-    {
+namespace TaskManagementBackend.Controllers
+{
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TaskController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
 
         public TaskController(ApplicationDbContext context)
         {
@@ -64,6 +64,11 @@ using TaskManagementBackend.Controllers;
             _context.TaskItems.Add(taskItem);
             await _context.SaveChangesAsync();
 
+            if (taskItem.TaggedUsers.Any())
+            {
+                await _emailService.SendTaggedNotificationEmail(taskItem.TaggedUsers, taskItem);
+            }
+
             return CreatedAtAction(nameof(GetTask), new { id = taskItem.TaskId }, taskItem);
         }
 
@@ -91,6 +96,11 @@ using TaskManagementBackend.Controllers;
 
             await _context.SaveChangesAsync();
 
+            if (taskItem.TaggedUsers.Any())
+            {
+                await _emailService.SendTaggedNotificationEmail(taskItem.TaggedUsers, taskItem);
+            }
+
             return NoContent();
         }
 
@@ -107,6 +117,8 @@ using TaskManagementBackend.Controllers;
 
             _context.TaskItems.Remove(taskItem);
             await _context.SaveChangesAsync();
+
+
 
             return NoContent();
         }
