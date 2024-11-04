@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
+
 namespace TaskManagementBackend.Controllers
 {
     public class TaskItem
@@ -22,6 +25,15 @@ namespace TaskManagementBackend.Controllers
         public int UserId { get; set; }
 
         public User? User { get; set; }
+
+        public string TaggedUsersJson { get; set; }
+
+        [NotMapped]
+        public List<string> TaggedUsers
+        {
+            get => TaggedUsersJson == null ? new List<string>() : JsonSerializer.Deserialize<List<string>>(TaggedUsersJson);
+            set => TaggedUsersJson = JsonSerializer.Serialize(value);
+        }
     }
 
 }
